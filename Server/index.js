@@ -7,8 +7,7 @@ import cp from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-import bodyParser from "body-parser";
-import user from "./src/routes/routes.js";
+import routes from "./src/routes/routes.js";
 import session from "express-session";
 
 dotenv.config();
@@ -25,10 +24,11 @@ app.use(
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(cp());
 
 
-app.use("/", user);
+app.use("/", routes);
 app.use(
   session({
     secret: process.env.SECRET_KEY, 
@@ -37,9 +37,6 @@ app.use(
   })
 );
 
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 app.get("/auth/login/success", (req, res) => {

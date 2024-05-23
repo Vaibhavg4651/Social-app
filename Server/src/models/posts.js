@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 
-const userSchema = new mongoose.Schema(
+const postsSchema = new mongoose.Schema(
   {
     _id: {
         type: String,
@@ -43,6 +43,6 @@ const userSchema = new mongoose.Schema(
     }
   }
 );
-const User = mongoose.model('user', userSchema)
+const Post = mongoose.model('posts', postsSchema)
 
-export default User
+export default Post

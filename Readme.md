@@ -32,3 +32,33 @@ cd Server
 npm install
 npm start
 ```
+## Routes
+#register user
+```bash
+    route: http://127.0.0.1:8001/v1/api/register
+    request : {
+        "name":"Vaibhav",
+        "user_email":"vaibhavg4651@gmail.com",
+        "user_password":"1234",
+        "user_name":"vaibhavg4651",
+        "user_photo_url":"googleimages@photo_url",
+        "user_bio":"Hey vaibhav this side"
+        }
+
+    response: {
+    "success": true,
+    "message": {
+        "name": "Vaibhav",
+        "user_email": "vaibhavg4651@gmail.com",
+        "user_password": "$2a$10$pNJQuv7k.qVF7LEMJxo0EuGd1bDnHWDNdLpFZidsl.HuQJPmVb9Ca",
+        "user_name": "vaibhavg4651",
+        "user_photo_url":"googleimages@photo_url",
+        "user_bio":"Hey vaibhav this side",
+        "user_followers": [],
+        "user_following": [],
+        "post_ids": [],
+        "_id": "883ec7fb-4c5d-435a-b7ed-b4fddfe96b05",
+        "created_on": "2024-05-23T09:35:16.373Z",
+        "__v": 0
+    }
+```
