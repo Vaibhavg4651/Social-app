@@ -15,7 +15,7 @@ const authUser = asyncHandler(async (req, res) => {
   }
   const Email = email.toLowerCase();
 
-  const user = await User.findOne({ email: Email });
+  const user = await User.findOne({ user_email: Email });
   if (user === null) {
     throw new Error("Invalid  email or password");
   } else {

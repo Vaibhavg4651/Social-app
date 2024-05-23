@@ -26,6 +26,14 @@ npm start
 * Place the .env file in the root folder in Server.
 * change the environament variable values according to the above database settings.
 
+## Environment Variables
+set these environment variables in the .env file
+```bash
+PORT=
+SECRET_KEY=
+MONGO_URL=
+```
+
 ## Setting Project
 ```bash
 cd Server
@@ -33,7 +41,7 @@ npm install
 npm start
 ```
 ## Routes
-#register user
+ // ##Register user
 ```bash
     route: http://127.0.0.1:8001/v1/api/register
     request : {
@@ -60,5 +68,32 @@ npm start
         "_id": "883ec7fb-4c5d-435a-b7ed-b4fddfe96b05",
         "created_on": "2024-05-23T09:35:16.373Z",
         "__v": 0
+    }
+```
+// ##Login
+```bash
+    route: http://127.0.0.1:8001/v1/api/login
+    request : {
+        "email":"vaibhavg4651@gmail.com",
+        "password":"your password"
+    }
+
+    response: {
+        "success": true,
+        "message": {
+            "_id": "883ec7fb-4c5d-435a-b7ed-b4fddfe96b05",
+            "name": "Vaibhav",
+            "user_email": "vaibhavg4651@gmail.com",
+            "user_password": "$2a$10$pNJQuv7k.qVF7LEMJxo0EuGd1bDnHWDNdLpFZidsl.HuQJPmVb9Ca",
+            "user_name": "vaibhavg4651",
+            "user_photo_url": "iushdiuhiauh",
+            "user_bio": "hasdiuhaishdiuhiuahiduh",
+            "user_followers": [],
+            "user_following": [],
+            "post_ids": [],
+            "created_on": "2024-05-23T09:35:16.373Z",
+            "__v": 0
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI4ODNlYzdmYi00YzVkLTQzNWEtYjdlZC1iNGZkZGZlOTZiMDUiLCJpYXQiOjE3MTY0NTc2MTAsImV4cCI6MTcxNjQ2MTIxMH0.Wlrp0sNEfHekKySttHUec8gw91y4bJlF23rco1z4fBA"
     }
 ```
