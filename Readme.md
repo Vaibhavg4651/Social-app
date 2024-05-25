@@ -41,7 +41,8 @@ npm install
 npm start
 ```
 ## Routes
- // ##Register user
+
+##Register user
 ```bash
     route: http://127.0.0.1:8001/v1/api/register
     request : {
@@ -70,7 +71,7 @@ npm start
         "__v": 0
     }
 ```
-// ##Login
+##Login
 ```bash
     route: http://127.0.0.1:8001/v1/api/login
     request : {
@@ -96,4 +97,32 @@ npm start
         },
         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI4ODNlYzdmYi00YzVkLTQzNWEtYjdlZC1iNGZkZGZlOTZiMDUiLCJpYXQiOjE3MTY0NTc2MTAsImV4cCI6MTcxNjQ2MTIxMH0.Wlrp0sNEfHekKySttHUec8gw91y4bJlF23rco1z4fBA"
     }
+```
+
+##Post
+```bash
+    route: http://127.0.0.1:8001/v1/api/post
+    request : {
+            "user_id":"883ec7fb-4c5d-435a-b7ed-b4fddfe96b05" , 
+            "name":"vaibhav", 
+            "user_name":"vaibhavg4651", 
+            "user_photo_url":"iushdiuhiauh" , 
+            "description":"This is my first post"
+        }
+
+    response: {
+        "success": true,
+        "message": {
+        "user_id": "883ec7fb-4c5d-435a-b7ed-b4fddfe96b05",
+        "name": "vaibhav",
+        "user_name": "vaibhavg4651",
+        "user_photo_url": "iushdiuhiauh",
+        "description": "This is my first post",
+        "likes": 0,
+        "count_comments": 0,
+        "_id": "9eb81a02-b685-4d91-9f2e-15bcbbdd41e8",
+        "created_on": "2024-05-25T05:34:36.760Z",
+        "__v": 0
+    }
+}
 ```

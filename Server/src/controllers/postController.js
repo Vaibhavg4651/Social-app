@@ -5,13 +5,13 @@ import Post from "../models/posts.js"
 // @desc    POST a Post
 // @route   POST /api/post
 const post = asyncHandler(async (req, res) => {
-  const {user_id , name, user_name, user_photo_url , description, likes} = req.body;
+  const {user_id , name, user_name, user_photo_url , description} = req.body;
   if (!user_id || !name || !user_name || !user_photo_url || !description) {
     throw new Error("provide all details during registeration ...");
   }
 
   const newPost = new Post({
-    user_id , name, user_name, user_photo_url , description, likes
+    user_id , name, user_name, user_photo_url , description
   });
   const post = await newPost.save();
   res.status(200).json({ success: true, message: post });

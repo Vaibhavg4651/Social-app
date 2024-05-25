@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema(
     },
     user_photo_url: {
       type: String,
+      default: "",
     },
     user_bio: {
       type: String,

@@ -13,6 +13,11 @@ const authUser = asyncHandler(async (req, res) => {
       .status(400)
       .json({ message: "please provide email and password" });
   }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(email)) {
+			return res.status(400).json({ error: "Invalid email format" });
+		}
+
   const Email = email.toLowerCase();
 
   const user = await User.findOne({ user_email: Email });
@@ -22,7 +27,7 @@ const authUser = asyncHandler(async (req, res) => {
     const validate = await bcrypt.compare(password, user.user_password);
     if (validate) {
       const token = await jwt.sign({ _id: user._id }, process.env.SECRET_KEY, {
-        expiresIn: "1hr",
+        expiresIn: "15d",
       });
       res.cookie("token", token, {
         path: "/",
@@ -76,7 +81,9 @@ const registerUser = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("User already exists");
     }
-    const hashedpassword = await bcrypt.hash(user_password, 10);
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedpassword = await bcrypt.hash(user_password, salt);
     const Email = user_email.toLowerCase();
 
     const newUser = new User({

@@ -22,8 +22,13 @@ const postsSchema = new mongoose.Schema(
       max: 50,
       unique: true,
     },
+    post_photo_url: {
+      type: String,
+      default:"",
+    },
     user_photo_url: {
       type: String,
+      default: "",
     },
     description: {
       type: String,
