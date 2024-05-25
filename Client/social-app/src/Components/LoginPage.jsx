@@ -1,20 +1,45 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
 import XSvg from "./svgs/X";
-
+import URL from "../ConfigUrl/config";
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
+import axios from "axios";
+import {setdata,setisLoggedin} from '../Reducers/userSlice'
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
 	});
+	const dispatch=useDispatch()
+    const navigate=useNavigate()
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async(e) => {
 		e.preventDefault();
-		console.log(formData);
+      try {
+        const res = await axios.post(`${URL}/login`, {
+          	email: formData.username,
+          	password: formData.password,
+        });
+		console.log(res.data)
+        if(res.data.success===true){
+			dispatch(setisLoggedin(true))
+		   dispatch(setdata(res.data.message))
+
+		   toast.success("login successfull", {
+			  'position': 'bottom-right',
+			  'theme': 'colored'
+		  })
+		  navigate(`/`)
+		  }else{
+			  err(res.data.message)
+		  }
+		}catch(e){
+			  console.log(e);
+      }
 	};
 
 	const handleInputChange = (e) => {

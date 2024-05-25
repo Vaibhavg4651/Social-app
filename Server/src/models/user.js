@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema(
     user_bio: {
       type: String,
       max: 100,
+      default:""
     },
     user_followers: {
       type: Array,

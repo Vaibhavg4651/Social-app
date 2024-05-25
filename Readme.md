@@ -43,15 +43,16 @@ npm start
 ## Routes
 
 ##Register user
+
 ```bash
     route: http://127.0.0.1:8001/v1/api/register
     request : {
-        "name":"Vaibhav",
-        "user_email":"vaibhavg4651@gmail.com",
-        "user_password":"1234",
-        "user_name":"vaibhavg4651",
-        "user_photo_url":"googleimages@photo_url",
-        "user_bio":"Hey vaibhav this side"
+        
+        "name":"Vabhav",
+        "user_email":"vai465@gmail.com",
+        "user_password":"12376564",
+        "user_name":"vaibhavg"
+
         }
 
     response: {
@@ -72,6 +73,7 @@ npm start
     }
 ```
 ##Login
+
 ```bash
     route: http://127.0.0.1:8001/v1/api/login
     request : {
@@ -99,7 +101,8 @@ npm start
     }
 ```
 
-##Post
+##Add Post
+
 ```bash
     route: http://127.0.0.1:8001/v1/api/post
     request : {

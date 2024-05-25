@@ -66,13 +66,11 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     user_email,
     user_password,
-    user_name,
-    user_photo_url,
-    user_bio,
+    user_name
   } = req.body;
   
   try{
-    if (!user_email || !name || !user_password || !user_name || !user_photo_url || !user_bio) {
+    if (!user_email || !name || !user_password || !user_name) {
       throw new Error("provide all details during registeration ...");
     }
     const userExists = await User.findOne({user_email});
@@ -90,14 +88,12 @@ const registerUser = asyncHandler(async (req, res) => {
       name,
       user_email: Email,
       user_password: hashedpassword,
-      user_name,
-      user_photo_url,
-      user_bio,
+      user_name
     });
     const user = await newUser.save();
     res.status(200).json({ success: true, message: user });
   } catch (error) {
-    console.error(error);
+      console.error(error);
         res.status(400).json({ message: "Error updating field" });
     }
   });
