@@ -99,8 +99,40 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
 
-// @desc    Get all users
+// @desc    Get allSuggedted users
 // @route   GET /api/users
+const getSuggestedUsers = asyncHandler(async (req, res) => {
+  try{
+  const { id } = req.params;
+  const usersFollowedByMe = await User.findOne({ _id: id }).select('user_following');
+  const users = await User.aggregate([
+    {
+      $match: {
+        _id: { $ne: id },
+      },
+    },
+    { $sample: { size: 10 } },
+  ]);
+  console.log(usersFollowedByMe);
+  
+  if (usersFollowedByMe === null || usersFollowedByMe === undefined || usersFollowedByMe == []) {
+    const suggestedUsers = users.slice(0, 4);
+    const updateProfileDetails = await User.findById(id);
+    res.json({ success: true, message: suggestedUsers, user: updateProfileDetails });
+  } else {
+    const filteredUsers = users.filter((user) => !usersFollowedByMe.user_following.includes(user._id));
+    const suggestedUsers = filteredUsers.slice(0, 4);
+    const updateProfileDetails = await User.findById(id);
+    res.json({ success: true, message: suggestedUsers, user: updateProfileDetails});
+  }
+} catch (error) {
+  console.error(error);
+  res.status(500).json({ message: "Error updating field" });
+}
+});
+
+
+
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({}).sort({ createdAt: -1 });
   res.json({ success: true, message: users });
@@ -125,30 +157,30 @@ const getUserById = asyncHandler(async (req, res) => {
 
 const followUnfollowUser = async (req, res) => {
 	try {
-		const { id } = req.params;
+		const { id , user } = req.params;
 		const userToModify = await User.findById(id);
-		const currentUser = await User.findById(req.user._id);
+		const currentUser = await User.findById(user);
 
-		if (id === req.user._id.toString()) {
+		if (id === user.toString()) {
 			return res.status(400).json({ error: "You can't follow/unfollow yourself" });
 		}
 
 		if (!userToModify || !currentUser) return res.status(400).json({ error: "User not found" });
 
-		const isFollowing = currentUser.following.includes(id);
+		const isFollowing = currentUser.user_following.includes(id) || false;
 
 		if (isFollowing) {
 			// Unfollow the user
-			await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } });
-			await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
+			await User.findByIdAndUpdate(id, { $pull: { user_followers: user } });
+			await User.findByIdAndUpdate(user, { $pull: { user_following: id } });
 
 			res.status(200).json({ message: "User unfollowed successfully" });
 		} else {
 			// Follow the user
-			await User.findByIdAndUpdate(id, { $push: { user_followers: req.user._id } });
-			await User.findByIdAndUpdate(req.user._id, { $push: { user_following: id } });
+			await User.findByIdAndUpdate(id, { $push: { user_followers: user } });
+			await User.findByIdAndUpdate(user, { $push: { user_following: id } });
 
-			res.status(200).json({ message: "User followed successfully" });
+			res.status(200).json({ success: true, message: "User followed successfully" });
 		}
 	} catch (error) {
 		console.log("Error in followUnfollowUser: ", error.message);
@@ -226,4 +258,4 @@ const updateProfileimages = asyncHandler(async (req, res) => {
 	}
 });
 
-export { authUser, registerUser, logout, getUsers, getUserById, updateProfileDetails, followUnfollowUser, updateProfileimages };
+export { authUser, registerUser, logout, getUsers, getSuggestedUsers, getUserById, updateProfileDetails, followUnfollowUser, updateProfileimages };

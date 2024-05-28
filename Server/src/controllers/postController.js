@@ -47,7 +47,9 @@ const getPostByUserId = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Error updating field" });
   }
 });
- 
+
+// @desc    GET Likes by postId
+// @route   GET /api/likes/:id/:user
 
 const likeUnlikePost = async (req, res) => {
 	try {

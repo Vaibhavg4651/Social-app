@@ -1,8 +1,7 @@
 import express from 'express'
 const router = express.Router()
 import {
-  authUser, registerUser, logout, getUsers, getUserById, followUnfollowUser,
-  updateProfileDetails, updateProfileimages
+  authUser, registerUser, logout, getSuggestedUsers, getUserById, followUnfollowUser, getUsers , updateProfileDetails, updateProfileimages
   } from '../controllers/userController.js'
   import{
     post,getPostByUserId,getPosts,likeUnlikePost
@@ -15,9 +14,9 @@ import {
   router.get('/v1/api/user/logout',logout)
   router.patch('/v1/api/user/:id',updateProfileDetails)
   router.patch('/v1/api/userimg/:id',updateProfileimages)
-  router.get('/v1/api/users',getUsers)
+  router.get('/v1/api/suggestedusers/:id',getSuggestedUsers)
   router.get('/v1/api/users/:id',getUserById)
-  router.get('/v1/api/follow/:id',followUnfollowUser)
+  router.get('/v1/api/follow/:id/:user',followUnfollowUser)
   
   
   // post routes

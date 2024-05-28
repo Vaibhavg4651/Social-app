@@ -7,6 +7,7 @@ import URL from "../ConfigUrl/config";
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
 import axios from "axios";
+import toast from "react-hot-toast";
 import {setdata,setisLoggedin} from '../Reducers/userSlice'
 
 const LoginPage = () => {
@@ -24,7 +25,6 @@ const LoginPage = () => {
           	email: formData.username,
           	password: formData.password,
         });
-		console.log(res.data)
         if(res.data.success===true){
 			dispatch(setisLoggedin(true))
 		   dispatch(setdata(res.data.message))
