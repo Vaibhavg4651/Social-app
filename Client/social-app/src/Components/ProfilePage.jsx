@@ -1,38 +1,30 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-
+import URL from "../ConfigUrl/config";
 import Posts from "./common/Posts";
 import EditProfileModal from "./EditProfileModal";
-
+import { useSelector } from "react-redux";
 import { POSTS } from "../utils/db/dummy";
-
+import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setdata } from "../Reducers/userSlice";
 
 const ProfilePage = () => {
 	const [coverImg, setCoverImg] = useState(null);
 	const [profileImg, setProfileImg] = useState(null);
 	const [feedType, setFeedType] = useState("posts");
+	const [isLoading, setIsLoading] = useState(false);
+	const user = useSelector((state) => state.user.userdata);
+	const dispatch = useDispatch();
 
 	const coverImgRef = useRef(null);
 	const profileImgRef = useRef(null);
-
-	const isLoading = false;
 	const isMyProfile = true;
-
-	const user = {
-		_id: "1",
-		fullName: "John Doe",
-		username: "johndoe",
-		profileImg: "/avatars/boy2.png",
-		coverImg: "/cover.png",
-		bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-		link: "https://youtube.com/@asaprogrammer_",
-		following: ["1", "2", "3"],
-		followers: ["1", "2", "3"],
-	};
 
 	const handleImgChange = (e, state) => {
 		const file = e.target.files[0];
@@ -46,21 +38,58 @@ const ProfilePage = () => {
 		}
 	};
 
+	const err = (msg) => {
+		toast.error(msg, {
+		  position: "bottom-right",
+		  theme: "colored",
+		});
+	  };
+
+	const handleUpdateProfile = async(e) => {
+		e.preventDefault();
+		try {
+			setIsLoading(true);
+			const res = await axios.patch(`${URL}/userimg/${user._id}`, {
+				user_id: user._id, 
+				user_photo_url: profileImg,
+				coverImg: coverImg,
+			});
+			console.log(res.data)
+			if (res.data.success === true) {
+			  toast.success("Successfully updated", {
+				position: "bottom-right",
+				theme: "colored",
+			  });
+			  dispatch(setdata(res.data.message))
+			  setProfileImg(null);
+				setCoverImg(null);
+			  window.location.reload();
+			} else {
+			  err(res.data);
+			}
+		  } catch (e) {
+			err("something went wrong...");
+		  } finally {
+			setIsLoading(false);
+		  }
+		
+	}
+
 	return (
 		<>
 			<div className='flex-[4_4_0]  border-r border-gray-700 min-h-screen '>
 				{/* HEADER */}
-				{isLoading && <ProfileHeaderSkeleton />}
-				{!isLoading && !user && <p className='text-center text-lg mt-4'>User not found</p>}
+				{isLoading && <p>Loading...</p>}
+				{ !isLoading && !user && <p className='text-center text-lg mt-4'>User not found</p>}
 				<div className='flex flex-col'>
-					{!isLoading && user && (
+					{ !isLoading && user && (
 						<>
 							<div className='flex gap-10 px-4 py-2 items-center'>
 								<Link to='/'>
 									<FaArrowLeft className='w-4 h-4' />
 								</Link>
 								<div className='flex flex-col'>
-									<p className='font-bold text-lg'>{user?.fullName}</p>
+									<p className='font-bold text-lg'>{user?.name}</p>
 									<span className='text-sm text-slate-500'>{POSTS?.length} posts</span>
 								</div>
 							</div>
@@ -95,7 +124,7 @@ const ProfilePage = () => {
 								{/* USER AVATAR */}
 								<div className='avatar absolute -bottom-16 left-4'>
 									<div className='w-32 rounded-full relative group/avatar'>
-										<img src={profileImg || user?.profileImg || "/avatar-placeholder.png"} />
+										<img src={profileImg || user?.user_photo_url || "/avatar-placeholder.png"} />
 										<div className='absolute top-5 right-3 p-1 bg-primary rounded-full group-hover/avatar:opacity-100 opacity-0 cursor-pointer'>
 											{isMyProfile && (
 												<MdEdit
@@ -120,36 +149,25 @@ const ProfilePage = () => {
 								{(coverImg || profileImg) && (
 									<button
 										className='btn btn-primary rounded-full btn-sm text-white px-4 ml-2'
-										onClick={() => alert("Profile updated successfully")}
+										onClick={handleUpdateProfile}
 									>
 										Update
 									</button>
 								)}
 							</div>
 
-							<div className='flex flex-col gap-4 mt-14 px-4'>
+							<div className='flex flex-col gap-4 mt-8 px-4'>
 								<div className='flex flex-col'>
-									<span className='font-bold text-lg'>{user?.fullName}</span>
-									<span className='text-sm text-slate-500'>@{user?.username}</span>
-									<span className='text-sm my-1'>{user?.bio}</span>
+									<div className="flex align-baseline">
+										<span className='font-bold text-lg p-1'>{user?.name}</span>
+										<span className='text-sm text-slate-500 p-2'>@{user?.user_name}</span>
+									</div>
+									<div className="flex">
+										<span className='text-sm my-1'>{user?.user_bio}</span>
+									</div>
 								</div>
 
 								<div className='flex gap-2 flex-wrap'>
-									{user?.link && (
-										<div className='flex gap-1 items-center '>
-											<>
-												<FaLink className='w-3 h-3 text-slate-500' />
-												<a
-													href='https://youtube.com/@asaprogrammer_'
-													target='_blank'
-													rel='noreferrer'
-													className='text-sm text-blue-500 hover:underline'
-												>
-													youtube.com/@asaprogrammer_
-												</a>
-											</>
-										</div>
-									)}
 									<div className='flex gap-2 items-center'>
 										<IoCalendarOutline className='w-4 h-4 text-slate-500' />
 										<span className='text-sm text-slate-500'>Joined July 2021</span>
@@ -157,11 +175,11 @@ const ProfilePage = () => {
 								</div>
 								<div className='flex gap-2'>
 									<div className='flex gap-1 items-center'>
-										<span className='font-bold text-xs'>{user?.following.length}</span>
+										<span className='font-bold text-xs'>{user?.user_following.length}</span>
 										<span className='text-slate-500 text-xs'>Following</span>
 									</div>
 									<div className='flex gap-1 items-center'>
-										<span className='font-bold text-xs'>{user?.followers.length}</span>
+										<span className='font-bold text-xs'>{user?.user_followers.length}</span>
 										<span className='text-slate-500 text-xs'>Followers</span>
 									</div>
 								</div>

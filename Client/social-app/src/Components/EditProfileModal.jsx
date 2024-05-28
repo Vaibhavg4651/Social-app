@@ -1,19 +1,80 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import URL from "../ConfigUrl/config";
+import { setdata } from "../Reducers/userSlice";
 
 const EditProfileModal = () => {
+	const user=useSelector((state)=>{return state.user})
+  	let authUser = user.userdata;
+  	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		fullName: "",
 		username: "",
 		email: "",
 		bio: "",
-		link: "",
-		newPassword: "",
-		currentPassword: "",
 	});
+	const isValidEmail = (email) => {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return emailRegex.test(email);
+	  };
 
 	const handleInputChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
+
+	useEffect(() => {
+		if (authUser) {
+			setFormData({
+				fullName: authUser.name,
+				username: authUser.user_name,
+				email: authUser.user_email,
+				bio: authUser.user_bio,
+			});
+		}
+	}, [authUser]);
+
+
+	const err = (msg) => {
+		toast.error(msg, {
+		  position: "bottom-right",
+		  theme: "colored",
+		});
+	  };
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+    if (!isValidEmail(formData.email)) {
+      err("Invalid email");
+      return false;
+    }
+      try {
+        const res = await axios.patch(`${URL}/user/${authUser._id}`, {
+			user_id: authUser._id,
+			name: formData.fullName,
+          	user_email: formData.email,
+          	user_name: formData.username,
+			user_bio: formData.bio,
+        });
+        if (res.data.success === true) {
+          toast.success("Successfully updated", {
+            position: "bottom-right",
+            theme: "colored",
+          });
+          dispatch(setdata(res.data.message));
+		  window.location.reload();
+
+        } else {
+          err(res.data.message);
+        }
+      } catch (e) {
+        err("something went wrong...");
+      }
+    };
+
+
 
 	return (
 		<>
@@ -28,10 +89,7 @@ const EditProfileModal = () => {
 					<h3 className='font-bold text-lg my-3'>Update Profile</h3>
 					<form
 						className='flex flex-col gap-4'
-						onSubmit={(e) => {
-							e.preventDefault();
-							alert("Profile updated successfully");
-						}}
+						onSubmit={handleSubmit}
 					>
 						<div className='flex flex-wrap gap-2'>
 							<input
@@ -68,32 +126,6 @@ const EditProfileModal = () => {
 								onChange={handleInputChange}
 							/>
 						</div>
-						<div className='flex flex-wrap gap-2'>
-							<input
-								type='password'
-								placeholder='Current Password'
-								className='flex-1 input border border-gray-700 rounded p-2 input-md'
-								value={formData.currentPassword}
-								name='currentPassword'
-								onChange={handleInputChange}
-							/>
-							<input
-								type='password'
-								placeholder='New Password'
-								className='flex-1 input border border-gray-700 rounded p-2 input-md'
-								value={formData.newPassword}
-								name='newPassword'
-								onChange={handleInputChange}
-							/>
-						</div>
-						<input
-							type='text'
-							placeholder='Link'
-							className='flex-1 input border border-gray-700 rounded p-2 input-md'
-							value={formData.link}
-							name='link'
-							onChange={handleInputChange}
-						/>
 						<button className='btn btn-primary rounded-full btn-sm text-white'>Update</button>
 					</form>
 				</div>

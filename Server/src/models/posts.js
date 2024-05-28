@@ -20,7 +20,6 @@ const postsSchema = new mongoose.Schema(
     user_name:{
       type: String,
       max: 50,
-      unique: true,
     },
     post_photo_url: {
       type: String,
@@ -35,8 +34,8 @@ const postsSchema = new mongoose.Schema(
       max: 300,
     },
     likes: {
-      type: Number,
-      default: 0,
+      type: Array,
+      default: [],
     },
     count_comments: {
         type: Number,

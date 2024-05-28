@@ -9,10 +9,17 @@ import morgan from "morgan";
 import helmet from "helmet";
 import routes from "./src/routes/routes.js";
 import session from "express-session";
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 connectDB();
 const app = express();
+
+cloudinary.config({
+	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 
 app.use(
@@ -24,7 +31,7 @@ app.use(
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
-app.use(express.json());
+app.use(express.json({limit: "5mb"}));
 app.use(cp());
 
 

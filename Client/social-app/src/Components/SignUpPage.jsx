@@ -57,7 +57,7 @@ const SignUpPage = () => {
     if (v) {
       try {
         const res = await axios.post(`${URL}/register`, {
-			name: formData.fullName,
+			      name: formData.fullName,
           	user_email: formData.email,
           	user_password: formData.password,
           	user_name: formData.username,

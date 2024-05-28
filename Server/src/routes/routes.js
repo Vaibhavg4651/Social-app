@@ -1,10 +1,11 @@
 import express from 'express'
 const router = express.Router()
 import {
-  authUser, registerUser, logout, getUsers, getUserById, updateProfile
+  authUser, registerUser, logout, getUsers, getUserById, followUnfollowUser,
+  updateProfileDetails, updateProfileimages
   } from '../controllers/userController.js'
   import{
-    post,getPostByUserId,getPosts
+    post,getPostByUserId,getPosts,likeUnlikePost
   } from '../controllers/postController.js'
   import { protect } from '../../middlewares/authmiddleware.js'
 
@@ -12,14 +13,18 @@ import {
   router.route('/v1/api/register').post(registerUser).get(protect, getUsers)
   router.post('/v1/api/login', authUser)
   router.get('/v1/api/user/logout',logout)
-  router.put('/v1/api/user/:id',updateProfile)
-  router.get('/v1/api/user/:id',getUserById)
+  router.patch('/v1/api/user/:id',updateProfileDetails)
+  router.patch('/v1/api/userimg/:id',updateProfileimages)
+  router.get('/v1/api/users',getUsers)
+  router.get('/v1/api/users/:id',getUserById)
+  router.get('/v1/api/follow/:id',followUnfollowUser)
   
   
   // post routes
-  router.post('/v1/api/post', post)
-  router.get('/v1/api/posts', getPosts)
-  router.get('/v1/api/post/:id', getPostByUserId)
+  router.post('/v1/api/post',post)
+  router.get('/v1/api/posts',getPosts)
+  router.get('/v1/api/post/:id',getPostByUserId)
+  router.get('/v1/api/like/:id/:user',likeUnlikePost)
 
 
   export default router

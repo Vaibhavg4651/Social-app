@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import { v2 as cloudinary } from "cloudinary";
 
 // @desc    Login a user
 // @route   POST /api/login
@@ -120,50 +120,110 @@ const getUserById = asyncHandler(async (req, res) => {
       console.error(error);
       res.status(500).json({ message: "Error updating field" });
     }
-  // if (check === "guser") {
-  //   try {
-  //     const user = await guser.findByIdAndUpdate(
-  //       id,
-  //       { $push: { mood: newValue } },
-  //       { new: true }
-  //     );
-  //     res.json(user);
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ message: "Error updating field" });
-  //   }
-  // }
+ 
 });
+
+const followUnfollowUser = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const userToModify = await User.findById(id);
+		const currentUser = await User.findById(req.user._id);
+
+		if (id === req.user._id.toString()) {
+			return res.status(400).json({ error: "You can't follow/unfollow yourself" });
+		}
+
+		if (!userToModify || !currentUser) return res.status(400).json({ error: "User not found" });
+
+		const isFollowing = currentUser.following.includes(id);
+
+		if (isFollowing) {
+			// Unfollow the user
+			await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } });
+			await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
+
+			res.status(200).json({ message: "User unfollowed successfully" });
+		} else {
+			// Follow the user
+			await User.findByIdAndUpdate(id, { $push: { user_followers: req.user._id } });
+			await User.findByIdAndUpdate(req.user._id, { $push: { user_following: id } });
+
+			res.status(200).json({ message: "User followed successfully" });
+		}
+	} catch (error) {
+		console.log("Error in followUnfollowUser: ", error.message);
+		res.status(500).json({ error: error.message });
+	}
+};
+
+
+
+
 
 // @desc    update user by ID
 // @route   Put /api/user/:id
 
-const updateProfile = asyncHandler(async (req, res) => {
-  const { id, newValue} = req.body;
-    try {
-      const user = await User.findByIdAndUpdate(
-        id,
-        { $push: { test: newValue } },
-        { new: true }
-      );
-      res.json(user);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error updating field" });
-  }
-  // if (check === "guser") {
-  //   try {
-  //     const user = await guser.findByIdAndUpdate(
-  //       id,
-  //       { $push: { test: newValue } },
-  //       { new: true }
-  //     );
-  //     res.json(user);
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ message: "Error updating field" });
-  //   }
-  // }
+const updateProfileDetails = asyncHandler(async (req, res) => {
+  const {user_id, name, user_email, user_name, user_bio} = req.body;
+
+	const userId = user_id;
+
+	try {
+		let user = await User.findById(userId);
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		user.name = name || user.name;
+		user.user_email = user_email || user.user_email;
+		user.user_name = user_name || user.user_name;
+		user.user_bio = user_bio || user.user_bio;
+
+		user = await user.save();
+
+		return res.status(200).json({ success: true, message: user });
+	} catch (error) {
+		console.log("Error in updateUser: ", error.message);
+		res.status(500).json({ error: error.message });
+	}
 });
 
-export { authUser, registerUser, logout, getUsers, getUserById, updateProfile };
+const updateProfileimages = asyncHandler(async (req, res) => {
+	let { user_id ,user_photo_url, coverImg} = req.body;
+
+	const userId = user_id;
+
+	try {
+		let user = await User.findById(userId);
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		if (user_photo_url) {
+			if (user.user_photo_url) {
+				// https://res.cloudinary.com/dyfqon1v6/image/upload/v1712997552/zmxorcxexpdbh8r0bkjb.png
+				await cloudinary.uploader.destroy(user.user_photo_url.split("/").pop().split(".")[0]);
+			}
+
+			const uploadedResponse = await cloudinary.uploader.upload(user_photo_url);
+			user_photo_url = uploadedResponse.secure_url;
+		}
+
+		if (coverImg) {
+			if (user.coverImg) {
+				await cloudinary.uploader.destroy(user.coverImg.split("/").pop().split(".")[0]);
+			}
+
+			const uploadedResponse = await cloudinary.uploader.upload(coverImg);
+			coverImg = uploadedResponse.secure_url;
+		}
+
+		user.user_photo_url = user_photo_url || user.user_photo_url;
+    user.coverImg = coverImg || user.coverImg;
+
+		user = await user.save();
+
+		return res.status(200).json({ success: true, message: user });
+	} catch (error) {
+		console.log("Error in updateUser: ", error.message);
+		res.status(500).json({ error: error.message });
+	}
+});
+
+export { authUser, registerUser, logout, getUsers, getUserById, updateProfileDetails, followUnfollowUser, updateProfileimages };
