@@ -1,35 +1,24 @@
-## FRONTEND
-[![React](https://img.shields.io/badge/React-%5E17.0.0-blue)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-%5E14.0.0-green)](https://nodejs.org/)
-
-You can access the live website here: https://stunning-tiramisu-06eb8c.netlify.app/
-
-A brief description of My project.
-
-## Social App Project
+## Social App Project ( You can access the live website here: https://stunning-tiramisu-06eb8c.netlify.app/)
 
 This Social app project is a full-featured social media application that replicates the core functionalities of Twitter. It is built using modern web development technologies and demonstrates how to create a scalable and robust application with features like pagination, liking posts, and JWT authentication.
 
 Features:
-User Authentication and Authorization:
 
+User Authentication and Authorization:
 JWT Authentication: Secure login and registration using JSON Web Tokens (JWT) to ensure only authenticated users can access certain features.
 User Registration: New users can create an account by providing necessary details.
 User Login: Existing users can log in using their credentials to access the platform.
 
 User Profiles:
-
 Profile Management: Users can view and update their profile information including profile picture and bio.
 Follow/Unfollow: Users can follow or unfollow other users to see their posts in the feed.
 
 Posts:
-
 Create Posts: Authenticated users can create new posts.
 Like Posts: Users can like posts. The like count is updated in real-time.
 Post Pagination: Posts are paginated with infinite Scrolling for improved performance and user experience, loading more posts as the user scrolls down.
 
 Feed:
-
 User Feed: Users can view posts from people they follow in a chronological order.
 Infinite Scroll: Implemented pagination with infinite scroll to load more posts as the user reaches the bottom of the page.
 
@@ -57,6 +46,9 @@ Authentication:
 JWT: For secure authentication and authorization
 
 ## Prerequisites
+## FRONTEND
+[![React](https://img.shields.io/badge/React-%5E17.0.0-blue)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-%5E14.0.0-green)](https://nodejs.org/)
 
 - [Node.js](https://nodejs.org/) installed on your machine.
 
