@@ -16,7 +16,6 @@ const Post = ({ post }) => {
 	const authUser = useSelector((state) => state.user.userdata);
 	const postOwner = post;
 	const isLiked = post.likes.includes(authUser._id);;
-	const isMyPost = authUser._id === post.user_id;
 
 	const formattedDate = "1h";
 	const err = (msg) => {

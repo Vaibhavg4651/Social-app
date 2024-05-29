@@ -2,7 +2,59 @@
 [![React](https://img.shields.io/badge/React-%5E17.0.0-blue)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-%5E14.0.0-green)](https://nodejs.org/)
 
-A brief description of your React project.
+You can access the live website here: https://stunning-tiramisu-06eb8c.netlify.app/
+
+A brief description of My project.
+
+## Social App Project
+
+This Social app project is a full-featured social media application that replicates the core functionalities of Twitter. It is built using modern web development technologies and demonstrates how to create a scalable and robust application with features like pagination, liking posts, and JWT authentication.
+
+Features:
+User Authentication and Authorization:
+
+JWT Authentication: Secure login and registration using JSON Web Tokens (JWT) to ensure only authenticated users can access certain features.
+User Registration: New users can create an account by providing necessary details.
+User Login: Existing users can log in using their credentials to access the platform.
+
+User Profiles:
+
+Profile Management: Users can view and update their profile information including profile picture and bio.
+Follow/Unfollow: Users can follow or unfollow other users to see their posts in the feed.
+
+Posts:
+
+Create Posts: Authenticated users can create new posts.
+Like Posts: Users can like posts. The like count is updated in real-time.
+Post Pagination: Posts are paginated with infinite Scrolling for improved performance and user experience, loading more posts as the user scrolls down.
+
+Feed:
+
+User Feed: Users can view posts from people they follow in a chronological order.
+Infinite Scroll: Implemented pagination with infinite scroll to load more posts as the user reaches the bottom of the page.
+
+
+Technologies Used:
+
+Frontend:
+
+React.js: For building the user interface.
+Redux: For state management.
+React Router: For client-side routing.
+Axios: For making HTTP requests.
+Tailwind: For writing CSS
+DaisyUI: For using ready-made tailwind components
+
+Backend:
+
+Node.js: For the server-side runtime environment.
+Express.js: For building the RESTful API.
+MongoDB: As the database to store user and post data.
+Mongoose: For object data modeling (ODM) with MongoDB.
+
+Authentication:
+
+JWT: For secure authentication and authorization
 
 ## Prerequisites
 
@@ -32,6 +84,9 @@ set these environment variables in the .env file
 PORT=
 SECRET_KEY=
 MONGO_URL=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
 ## Setting Project
@@ -40,9 +95,9 @@ cd Server
 npm install
 npm start
 ```
-## Routes
+## Some Major Routes
 
-##Register user
+## Register user
 
 ```bash
     route: http://127.0.0.1:8001/v1/api/register
@@ -72,7 +127,7 @@ npm start
         "__v": 0
     }
 ```
-##Login
+## Login
 
 ```bash
     route: http://127.0.0.1:8001/v1/api/login
@@ -101,7 +156,7 @@ npm start
     }
 ```
 
-##Add Post
+## Add Post
 
 ```bash
     route: http://127.0.0.1:8001/v1/api/post

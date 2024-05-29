@@ -113,7 +113,6 @@ const getSuggestedUsers = asyncHandler(async (req, res) => {
     },
     { $sample: { size: 10 } },
   ]);
-  console.log(usersFollowedByMe);
   
   if (usersFollowedByMe === null || usersFollowedByMe === undefined || usersFollowedByMe == []) {
     const suggestedUsers = users.slice(0, 4);

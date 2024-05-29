@@ -1,2 +1,2 @@
-const API_URL = "http://127.0.0.1:8001/v1/api";
+const API_URL = "https://social-app-backend-6moc.onrender.com/v1/api";
 export default API_URL;
